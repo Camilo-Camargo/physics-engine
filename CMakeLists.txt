@@ -8,9 +8,13 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
+add_subdirectory(vector2d)
+
 add_executable(PhysicsEngine main.c main.h)
 
 # C99 version
 set_property(TARGET PhysicsEngine PROPERTY C_STANDARD 99)
 
-target_link_libraries(PhysicsEngine ${SDL2_LIBRARIES})
+target_link_libraries(PhysicsEngine ${SDL2_LIBRARIES} vector2d)
+
+target_include_directories(vector2d PUBLIC "${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/vector2d")

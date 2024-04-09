@@ -42,7 +42,7 @@ int main(void) {
 
   double x_speed = 2.5;
   double y_speed = 2;
-  SDL_Rect ball = {100, 100, 100, 100};
+  SDL_Rect ball = {20, 20, 100, 100};
 
   SDL_Event e;
   bool is_open = true;
@@ -70,7 +70,7 @@ int main(void) {
       y_speed *= -1;
     }
 
-    SDL_SetRenderDrawColor(renderer, 0, 205, 205, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
     SDL_RenderFillRect(renderer, &ball);
     SDL_RenderPresent(renderer);
 
