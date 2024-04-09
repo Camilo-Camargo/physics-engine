@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 // TODO: Implement safe malloc and safe free
-Vector2D *vector2d_new(int16_t x, int16_t y) {
+Vector2D *vector2d_new(double x, double y) {
   Vector2D *u = malloc(sizeof(Vector2D));
   if (u == NULL) {
     fprintf(stderr, "You can't allocate more memory");

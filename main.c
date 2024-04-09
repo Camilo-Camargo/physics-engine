@@ -1,4 +1,6 @@
 #include "main.h"
+#include "vector2d.h"
+
 #include "SDL_error.h"
 #include "SDL_video.h"
 #include <SDL.h>
@@ -8,6 +10,7 @@
 #include <SDL_render.h>
 #include <SDL_timer.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -35,14 +38,14 @@ int main(void) {
     return -1;
   }
 
-
   SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
   SDL_RenderClear(renderer);
   SDL_RenderPresent(renderer);
 
-  double x_speed = 2.5;
-  double y_speed = 2;
-  SDL_Rect ball = {20, 20, 100, 100};
+  Vector2D *ball_speed = vector2d_new(2.5, 2);
+  Vector2D *ball_position = vector2d_new(20, 20);
+  uint16_t ball_w = 100;
+  uint16_t ball_h = 100;
 
   SDL_Event e;
   bool is_open = true;
@@ -59,24 +62,27 @@ int main(void) {
       }
     }
 
-    ball.x += x_speed;
-    ball.y += y_speed;
+    Vector2D *ball_position_del = ball_position;
+    ball_position = vector2d_add(ball_position, ball_speed);
+    vector2d_del(ball_position_del);
 
-    if (ball.x > (SCREEN_WIDTH - ball.w) || ball.x < 0) {
-      x_speed *= -1;
+    if (ball_position->x > (SCREEN_WIDTH - ball_w) || ball_position->x < 0) {
+      ball_speed->x *= -1;
     }
 
-    if (ball.y > (SCREEN_HEIGHT - ball.h) || ball.y < 0) {
-      y_speed *= -1;
+    if (ball_position->y > (SCREEN_HEIGHT - ball_h) || ball_position->y < 0) {
+      ball_speed->y *= -1;
     }
 
+    SDL_Rect ball = {ball_position->x, ball_position->y, 100, 100};
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
     SDL_RenderFillRect(renderer, &ball);
     SDL_RenderPresent(renderer);
 
     Uint64 timer_end = SDL_GetPerformanceCounter();
-    float elapsedMS = (timer_end - timer_start) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
-  	SDL_Delay(floor(16.666f - elapsedMS));
+    float elapsedMS = (timer_end - timer_start) /
+                      (float)SDL_GetPerformanceFrequency() * 1000.0f;
+    SDL_Delay(floor(16.666f - elapsedMS));
   }
 
   SDL_DestroyRenderer(renderer);
