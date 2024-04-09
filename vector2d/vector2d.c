@@ -23,41 +23,31 @@ void vector2d_del(Vector2D *u) {
   free(u);
 }
 
-Vector2D *vector2d_add(Vector2D *u, Vector2D *v) {
+void vector2d_add(Vector2D *u, Vector2D *v) {
   if (u == NULL || v == NULL) {
     fprintf(stderr, "add vector2d");
   }
 
-  Vector2D *w = vector2d_new(0, 0);
-
-  w->x = u->x + v->x;
-  w->y = u->y + v->y;
-
-  return w;
+  u->x += v->x;
+  u->y += v->y;
 }
 
-Vector2D *sub(Vector2D *u, Vector2D *v) {
+void sub(Vector2D *u, Vector2D *v) {
   if (u == NULL || v == NULL) {
     fprintf(stderr, "add vector2d");
   }
 
-  Vector2D *w = vector2d_new(0, 0);
-
-  w->x = u->x - v->x;
-  w->y = u->y - v->y;
-
-  return w;
+  u->x -= v->x;
+  u->y -= v->y;
 }
 
-Vector2D *vector2d_mul(Vector2D *u, double s) {
+void vector2d_mul(Vector2D *u, double s) {
   if (u == NULL) {
     fprintf(stderr, "add vector2d");
   }
 
   Vector2D *w = vector2d_new(0, 0);
 
-  w->x = u->x * s;
-  w->y = u->y * s;
-
-  return w;
+  u->x *= s;
+  u->y *= s;
 }

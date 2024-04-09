@@ -10,7 +10,6 @@
 #include <SDL_render.h>
 #include <SDL_timer.h>
 #include <stdbool.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -62,9 +61,7 @@ int main(void) {
       }
     }
 
-    Vector2D *ball_position_del = ball_position;
-    ball_position = vector2d_add(ball_position, ball_speed);
-    vector2d_del(ball_position_del);
+    vector2d_add(ball_position, ball_speed);
 
     if (ball_position->x > (SCREEN_WIDTH - ball_w) || ball_position->x < 0) {
       ball_speed->x *= -1;
