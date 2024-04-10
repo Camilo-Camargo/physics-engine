@@ -1,4 +1,5 @@
 #include "vector2d.h"
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -50,4 +51,73 @@ void vector2d_mul(Vector2D *u, double s) {
 
   u->x *= s;
   u->y *= s;
+}
+
+void vector2d_div(Vector2D *u, double s) {
+  if (u == NULL) {
+    fprintf(stderr, "add vector2d");
+  }
+
+  if (s == 0) {
+    fprintf(stderr, "You try divide by 0");
+    exit(1);
+  }
+
+  u->x /= s;
+  u->y /= s;
+}
+
+Vector2D *vector2d_clone(Vector2D *u) {
+  if (u == NULL) {
+    fprintf(stderr, "add vector2d");
+  }
+
+  return vector2d_new(u->x, u->y);
+}
+
+void vector2d_normalize(Vector2D *u) {
+  if (u == NULL) {
+    fprintf(stderr, "add vector2d");
+  }
+  double mag = vector2d_mag(u);
+  vector2d_div(u, mag);
+}
+
+Vector2D *vector2d_normalize_new(Vector2D *u) {
+  if (u == NULL) {
+    fprintf(stderr, "add vector2d");
+  }
+
+  double mag = vector2d_mag(u);
+  Vector2D *v = vector2d_clone(u);
+  vector2d_div(v, mag);
+
+  return v;
+}
+
+double vector2d_mag(Vector2D *u) {
+  if (u == NULL) {
+    fprintf(stderr, "add vector2d");
+  }
+
+  return fabs((u->x * u->x + u->y * u->y));
+}
+
+void vector2d_set_mag(Vector2D *u, double s) {
+  if (u == NULL) {
+    fprintf(stderr, "add vector2d");
+  }
+
+  vector2d_normalize(u);
+  vector2d_mul(u, s);
+}
+
+void vector2d_limit(Vector2D *u, double l) {
+  if (u == NULL) {
+    fprintf(stderr, "add vector2d");
+  }
+
+  if (vector2d_mag(u) > l) {
+    vector2d_set_mag(u, l);
+  }
 }
