@@ -43,8 +43,10 @@ int main(void) {
     return -1;
   }
 
-  // start creation
-  // end creation
+  Vector2D *square_speed = vector2d_new(2.5, 2);
+  Vector2D *square_position = vector2d_new(20, 20);
+  uint16_t square_w = 100;
+  uint16_t square_h = 100;
 
   SDL_Event e;
   bool is_open = true;
@@ -53,33 +55,32 @@ int main(void) {
     Uint64 timer_start = SDL_GetPerformanceCounter();
     clear(renderer);
 
-    // start events
     while (SDL_PollEvent(&e)) {
       if (e.type == SDL_QUIT) {
         is_open = false;
       }
-    } 
-    //end events
+    }
 
+    vector2d_add(square_position, square_speed);
 
+    if (square_position->x > (SCREEN_WIDTH - square_w) || square_position->x < 0) {
+      square_speed->x *= -1;
+    }
 
+    if (square_position->y > (SCREEN_HEIGHT - square_h) || square_position->y < 0) {
+      square_speed->y *= -1;
+    }
 
-    // start physics
-    // end physics
-    
+    SDL_Rect square = {square_position->x, square_position->y, 100, 100};
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    SDL_RenderFillRect(renderer, &square);
+    SDL_RenderPresent(renderer);
 
-
-
-    // start render
-    // end Render
     Uint64 timer_end = SDL_GetPerformanceCounter();
     float elapsedMS = (timer_end - timer_start) /
                       (float)SDL_GetPerformanceFrequency() * 1000.0f;
     SDL_Delay(floor(16.666f - elapsedMS));
   }
-
-  // start deletion
-  // end deletion
 
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
