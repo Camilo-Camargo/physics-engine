@@ -1,5 +1,5 @@
 #include "main.h"
-#include "vector2d.h"
+#include "engine/math/vector2d.h"
 
 #include "SDL_error.h"
 #include "SDL_video.h"
