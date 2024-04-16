@@ -100,7 +100,7 @@ double vector2d_mag(Vector2D *u) {
     fprintf(stderr, "add vector2d");
   }
 
-  return fabs((u->x * u->x + u->y * u->y));
+  return fabs(sqrt(u->x * u->x + u->y * u->y));
 }
 
 void vector2d_set_mag(Vector2D *u, double s) {
