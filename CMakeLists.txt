@@ -11,7 +11,7 @@ include_directories(${SDL2_INCLUDE_DIRS})
 
 add_subdirectory(engine)
 
-add_executable(PhysicsEngine main.c main.h)
+add_executable(PhysicsEngine main.c main.h draw_circle.h draw_circle.c)
 add_executable(PhysicsEngineServer server.c)
 
 # C99 version

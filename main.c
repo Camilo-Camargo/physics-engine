@@ -1,4 +1,5 @@
 #include "main.h"
+#include "draw_circle.h"
 #include "engine/math/vector2d.h"
 #include "engine/physics/physics_object.h"
 #include "physics/physics_circle_object.h"
@@ -51,17 +52,19 @@ int main(void) {
   double x_middle = (double)SCREEN_WIDTH / 2;
   double y_middle = (double)SCREEN_WIDTH / 2;
 
-  double square_width = 100;
-  double square_height = 100;
+  double square_width = 50;
+  double square_height = 50;
 
   PhysicsShapeObject *square = physics_square_object_new(
-      x_middle-square_width/2, 100, square_width, square_height, 1);
+      x_middle - square_width / 2, 100, square_width, square_height, 10);
 
-  double circle_radius = 10;
-  PhysicsShapeObject *circle =
-      physics_circle_object_new(x_middle-circle_radius, 100, circle_radius, 1);
+  PhysicsShapeObject *square2 = physics_square_object_new(20, 20, 20, 20, 3);
 
-  PhysicsShapeObject *objects[] = {square};
+  double circle_radius = 30;
+  PhysicsShapeObject *circle = physics_circle_object_new(
+      x_middle - circle_radius + 200, 100, circle_radius, 1);
+
+  PhysicsShapeObject *objects[] = {square, square2, circle};
 
   size_t objects_len = sizeof objects / sizeof objects[0];
 
@@ -75,7 +78,7 @@ int main(void) {
 
   double rho = 1;
   double frontal_surface = 1;
-  double coefficient_of_drag = 2;
+  double coefficient_of_drag = 1;
   double liquid_y = ((double)SCREEN_HEIGHT / 2) + ((double)SCREEN_HEIGHT / 6);
   // end creation
 
@@ -106,6 +109,7 @@ int main(void) {
     for (size_t i = 0; i < objects_len; i++) {
       double width = SCREEN_WIDTH;
       double height = SCREEN_HEIGHT;
+      double object_height = 0;
 
       enum PhysicsShapeObjectType shape_object_type = objects[i]->shape_type;
 
@@ -114,11 +118,13 @@ int main(void) {
         PhysicsCircleShape *circle = (PhysicsCircleShape *)objects[i]->shape;
         width -= circle->radius;
         height -= circle->radius;
+        object_height = circle->radius;
       } break;
       case PHYSICS_SHAPE_SQUARE: {
         PhysicsSquareShape *square = (PhysicsSquareShape *)objects[i]->shape;
         width -= square->width;
         height -= square->height;
+        object_height = square->height;
       } break;
       }
 
@@ -130,10 +136,10 @@ int main(void) {
 
       if (physics->position->y > height || physics->position->y < 0) {
         physics->position->y = height;
-        // objects[i]->velocity->y *= bounce;
+        physics->velocity->y *= bounce;
       }
 
-      if (physics->position->y >= liquid_y - square_height) {
+      if (physics->position->y >= liquid_y - object_height) {
         Vector2D *drag = vector2d_clone(physics->velocity);
         vector2d_mul(drag, -1);
         double mag = vector2d_mag(physics->velocity);
@@ -152,7 +158,7 @@ int main(void) {
         vector2d_del(friction);
       }
 
-      if (is_mouse_pressed && physics->position->y < liquid_y - square_height) {
+      if (is_mouse_pressed && physics->position->y < liquid_y - object_height) {
         Vector2D *force_x = vector2d_clone(wind);
         physics_object_apply_force(physics, force_x);
         vector2d_del(force_x);
@@ -173,6 +179,8 @@ int main(void) {
       switch (shape_object_type) {
       case PHYSICS_SHAPE_CIRCLE: {
         PhysicsCircleShape *shape = (PhysicsCircleShape *)objects[i]->shape;
+        SDL_RenderFillCircle(renderer, physics->position->x,
+                             physics->position->y, shape->radius);
         break;
       }
       case PHYSICS_SHAPE_SQUARE: {
